@@ -28,41 +28,37 @@ import java.util.*;
         @Example(
             title = "Using username and token",
             code = """
-                  - id: hello
-                    type: io.kestra.plugin.zendesk.tickets.Create
-                    domain: mycompany.zendesk.com
-                    username: my_email@example.com
-                    token: zendesk_api_token
-                    subject: Workflow failed
-                    description: |
-                      "{{ execution.id }} has failed on {{ taskrun.startDate }}.
-                      See the link below for more details."
-                    priority: NORMAL
-                    ticketType: INCIDENT
-                    assigneeId: 1
-                    tags:
-                      - bug
-                      - workflow
-                  """
+                   domain: mycompany.zendesk.com
+                   username: my_email@example.com
+                   token: zendesk_api_token
+                   subject: Workflow failed
+                   description: |
+                     "{{ execution.id }} has failed on {{ taskrun.startDate }}.
+                     See the link below for more details."
+                   priority: NORMAL
+                   ticketType: INCIDENT
+                   assigneeId: 1
+                   tags:
+                     - bug
+                     - workflow
+                   """
         ),
         @Example(
             title = "Using OAuth token",
             code = """
-                  - id: hello
-                    type: io.kestra.plugin.zendesk.tickets.Create
-                    domain: mycompany.zendesk.com
-                    oauthToken: zendesk_oauth_token
-                    subject: Workflow failed
-                    description: |
-                      "{{ execution.id }} has failed on {{ taskrun.startDate }}.
-                      See the link below for more details."
-                    priority: NORMAL
-                    ticketType: INCIDENT
-                    assigneeId: 1
-                    tags:
-                      - bug
-                      - workflow
-                  """
+                   domain: mycompany.zendesk.com
+                   oauthToken: zendesk_oauth_token
+                   subject: Workflow failed
+                   description: |
+                     "{{ execution.id }} has failed on {{ taskrun.startDate }}.
+                     See the link below for more details."
+                   priority: NORMAL
+                   ticketType: INCIDENT
+                   assigneeId: 1
+                   tags:
+                     - bug
+                     - workflow
+                   """
         )
     }
 )
