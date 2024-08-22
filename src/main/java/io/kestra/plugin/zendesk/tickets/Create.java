@@ -21,43 +21,56 @@ import java.util.*;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "Opens new ticket at Zendesk"
+    title = "Opens new ticket at Zendesk."
 )
 @Plugin(
     examples = {
         @Example(
-            title = "Using username and token",
+            title = "Create Zendesk ticket using username and token.",
+            full = true,
             code = """
-                   domain: mycompany.zendesk.com
-                   username: my_email@example.com
-                   token: zendesk_api_token
-                   subject: Workflow failed
-                   description: |
-                     "{{ execution.id }} has failed on {{ taskrun.startDate }}.
-                     See the link below for more details."
-                   priority: NORMAL
-                   ticketType: INCIDENT
-                   assigneeId: 1
-                   tags:
-                     - bug
-                     - workflow
+                   id: zendesk_flow
+                   namespace: company.team
+                   
+                   tasks:
+                     - id: create_ticket
+                       type: io.kestra.plugin.zendesk.tickets.Create
+                       domain: mycompany.zendesk.com
+                       username: my_email@example.com
+                       token: zendesk_api_token
+                       subject: Workflow failed
+                       description: |
+                         "{{ execution.id }} has failed on {{ taskrun.startDate }}.
+                         See the link below for more details."
+                       priority: NORMAL
+                       ticketType: INCIDENT
+                       assigneeId: 1
+                       tags:
+                         - bug
+                         - workflow
                    """
         ),
         @Example(
-            title = "Using OAuth token",
+            title = "Create Zendesk ticket using OAuth token.",
             code = """
-                   domain: mycompany.zendesk.com
-                   oauthToken: zendesk_oauth_token
-                   subject: Workflow failed
-                   description: |
-                     "{{ execution.id }} has failed on {{ taskrun.startDate }}.
-                     See the link below for more details."
-                   priority: NORMAL
-                   ticketType: INCIDENT
-                   assigneeId: 1
-                   tags:
-                     - bug
-                     - workflow
+                   id: zendesk_flow
+                   namespace: company.team
+                   
+                   tasks:
+                     - id: create_ticket
+                       type: io.kestra.plugin.zendesk.tickets.Create
+                       domain: mycompany.zendesk.com
+                       oauthToken: zendesk_oauth_token
+                       subject: Workflow failed
+                       description: |
+                         "{{ execution.id }} has failed on {{ taskrun.startDate }}.
+                         See the link below for more details."
+                       priority: NORMAL
+                       ticketType: INCIDENT
+                       assigneeId: 1
+                       tags:
+                         - bug
+                         - workflow
                    """
         )
     }
