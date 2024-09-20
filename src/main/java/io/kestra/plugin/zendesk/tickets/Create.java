@@ -52,6 +52,7 @@ import java.util.*;
         ),
         @Example(
             title = "Create Zendesk ticket using OAuth token.",
+            full = true,
             code = """
                    id: zendesk_flow
                    namespace: company.team
