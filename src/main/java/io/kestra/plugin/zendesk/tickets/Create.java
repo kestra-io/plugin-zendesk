@@ -38,10 +38,9 @@ import java.util.*;
                        domain: mycompany.zendesk.com
                        username: my_email@example.com
                        token: zendesk_api_token
-                       subject: Workflow failed
+                       subject: "Increased 5xx in Demo Service"
                        description: |
-                         "{{ execution.id }} has failed on {{ taskrun.startDate }}.
-                         See the link below for more details."
+                         "The number of 5xx has increased beyond the threshold for Demo service."
                        priority: NORMAL
                        ticketType: INCIDENT
                        assigneeId: 1
@@ -62,6 +61,29 @@ import java.util.*;
                        type: io.kestra.plugin.zendesk.tickets.Create
                        domain: mycompany.zendesk.com
                        oauthToken: zendesk_oauth_token
+                       subject: "Increased 5xx in Demo Service"
+                       description: |
+                         "The number of 5xx has increased beyond the threshold for Demo service."
+                       priority: NORMAL
+                       ticketType: INCIDENT
+                       assigneeId: 1
+                       tags:
+                         - bug
+                         - workflow
+                   """
+        ),
+        @Example(
+            title = "Create a ticket when a Kestra workflow in any namespace with `company` as prefix fails.",
+            full = true,
+            code = """
+                   id: create_ticket_on_failure
+                   namespace: company.team
+                   
+                   tasks:
+                     - id: create_ticket
+                       type: io.kestra.plugin.zendesk.tickets.Create
+                       domain: mycompany.zendesk.com
+                       oauthToken: zendesk_oauth_token
                        subject: Workflow failed
                        description: |
                          "{{ execution.id }} has failed on {{ taskrun.startDate }}.
@@ -72,6 +94,17 @@ import java.util.*;
                        tags:
                          - bug
                          - workflow
+                   triggers:
+                     - id: on_failure
+                       type: io.kestra.plugin.core.trigger.Flow
+                       conditions:
+                         - type: io.kestra.plugin.core.condition.ExecutionStatusCondition
+                           in:
+                             - FAILED
+                             - WARNING
+                         - type: io.kestra.plugin.core.condition.ExecutionNamespaceCondition
+                           namespace: company
+                           comparison: PREFIX
                    """
         )
     }
