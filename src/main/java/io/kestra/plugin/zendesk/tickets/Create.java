@@ -3,6 +3,7 @@ package io.kestra.plugin.zendesk.tickets;
 import io.kestra.core.models.annotations.Example;
 import io.kestra.core.models.annotations.Plugin;
 import io.kestra.core.models.annotations.PluginProperty;
+import io.kestra.core.models.property.Property;
 import io.kestra.core.models.tasks.RunnableTask;
 import io.kestra.core.runners.RunContext;
 import io.kestra.plugin.zendesk.ZendeskConnection;
@@ -31,7 +32,7 @@ import java.util.*;
             code = """
                    id: zendesk_flow
                    namespace: company.team
-                   
+
                    tasks:
                      - id: create_ticket
                        type: io.kestra.plugin.zendesk.tickets.Create
@@ -55,7 +56,7 @@ import java.util.*;
             code = """
                    id: zendesk_flow
                    namespace: company.team
-                   
+
                    tasks:
                      - id: create_ticket
                        type: io.kestra.plugin.zendesk.tickets.Create
@@ -78,7 +79,7 @@ import java.util.*;
             code = """
                    id: create_ticket_on_failure
                    namespace: company.team
-                   
+
                    tasks:
                      - id: create_ticket
                        type: io.kestra.plugin.zendesk.tickets.Create
@@ -142,8 +143,7 @@ public class Create extends ZendeskConnection implements RunnableTask<Create.Out
     @Schema(
         title = "Ticket subject"
     )
-    @PluginProperty(dynamic = true)
-    private String subject;
+    private Property<String> subject;
 
     @Schema(
         title = "Ticket description"
@@ -161,8 +161,7 @@ public class Create extends ZendeskConnection implements RunnableTask<Create.Out
                        - LOW
                       """
     )
-    @PluginProperty
-    private Priority priority;
+    private Property<Priority> priority;
 
     @Schema(
         title = "Ticket type",
@@ -174,33 +173,28 @@ public class Create extends ZendeskConnection implements RunnableTask<Create.Out
                        - TASK
                       """
     )
-    @PluginProperty
-    private Type ticketType;
+    private Property<Type> ticketType;
 
     @Schema(
         title = "Id of assignee"
     )
-    @PluginProperty
-    private Long assigneeId;
+    private Property<Long> assigneeId;
 
     @Schema(
         title = "List of tags for ticket"
     )
-    @PluginProperty(dynamic = true)
-    private List<String> tags;
+    private Property<List<String>> tags;
 
     @Override
     public Create.Output run(RunContext runContext) throws Exception {
         Ticket.TicketBuilder request = Ticket.builder()
-            .subject(runContext.render(this.subject))
+            .subject(runContext.render(this.subject).as(String.class).orElse(null))
             .description(runContext.render(this.description))
-            .priority(this.priority.toString())
-            .type(this.ticketType.toString())
-            .tags(runContext.render(this.tags));
+            .priority(runContext.render(this.priority).as(Priority.class).map(Priority::toString).orElse(null))
+            .type(runContext.render(this.ticketType).as(Create.Type.class).map(Create.Type::toString).orElse(null))
+            .tags(runContext.render(this.tags).asList(String.class));
 
-        Optional
-            .ofNullable(assigneeId)
-            .ifPresent(request::id);
+        runContext.render(assigneeId).as(Long.class).ifPresent(request::id);
 
         String requestBody = mapper.writeValueAsString(new TicketRequest(request.build()));
 

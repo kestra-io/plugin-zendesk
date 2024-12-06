@@ -3,6 +3,7 @@ package io.kestra.plugin.zendesk;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.kestra.core.exceptions.IllegalVariableEvaluationException;
 import io.kestra.core.models.annotations.PluginProperty;
+import io.kestra.core.models.property.Property;
 import io.kestra.core.models.tasks.Task;
 import io.kestra.core.runners.RunContext;
 import io.kestra.core.serializers.JacksonMapper;
@@ -36,30 +37,26 @@ public abstract class ZendeskConnection extends Task {
         title = "Zendesk domain url"
     )
     @NotNull
-    @PluginProperty(dynamic = true)
-    private String domain;
+    private Property<String> domain;
 
     @Schema(
         title = "Zendesk username"
     )
-    @PluginProperty(dynamic = true)
-    private String username;
+    private Property<String> username;
 
     @Schema(
         title = "Zendesk api token"
     )
-    @PluginProperty(dynamic = true)
-    private String token;
+    private Property<String> token;
 
     @Schema(
         title = "Zendesk oauth token, if api token and username is not provided"
     )
-    @PluginProperty(dynamic = true)
-    private String oauthToken;
+    private Property<String> oauthToken;
 
     public <T> T makeCall(RunContext runContext, String body, Class<T> clazz) throws Exception {
         try (HttpClient client = HttpClient.newHttpClient()) {
-            String url = ZENDESK_URL_FORMAT.formatted(runContext.render(this.domain));
+            String url = ZENDESK_URL_FORMAT.formatted(runContext.render(this.domain).as(String.class).orElseThrow());
 
             HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
@@ -79,16 +76,18 @@ public abstract class ZendeskConnection extends Task {
     }
 
     private String getAuthorizationHeader(RunContext runContext) throws IllegalVariableEvaluationException {
-        if (this.token != null && !this.token.isEmpty()) {
+        var renderedToken = runContext.render(this.token).as(String.class);
+        var renderedOauthToken = runContext.render(this.oauthToken).as(String.class);
+        if (renderedToken.isPresent() && !renderedToken.get().isEmpty()) {
             return "Basic " + Base64
                 .getEncoder()
                 .encodeToString(
                     "%s/token:%s"
-                        .formatted(runContext.render(this.username), runContext.render(this.token))
+                        .formatted(runContext.render(this.username).as(String.class).orElse(null), renderedToken.get())
                         .getBytes()
                 );
-        } else if (this.oauthToken != null && !this.oauthToken.isEmpty()) {
-            return "Bearer " + this.oauthToken;
+        } else if (renderedOauthToken.isPresent() && !renderedOauthToken.get().isEmpty()) {
+            return "Bearer " + renderedOauthToken.get();
         }
 
         throw new IllegalArgumentException("Authentication details are missing");
