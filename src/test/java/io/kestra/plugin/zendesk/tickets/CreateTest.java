@@ -2,6 +2,7 @@ package io.kestra.plugin.zendesk.tickets;
 
 import com.google.common.base.Strings;
 import io.kestra.core.junit.annotations.KestraTest;
+import io.kestra.core.models.property.Property;
 import io.kestra.core.runners.RunContext;
 import io.kestra.core.runners.RunContextFactory;
 import jakarta.inject.Inject;
@@ -28,14 +29,14 @@ class CreateTest {
         RunContext runContext = runContextFactory.of();
 
         Create task = Create.builder()
-            .domain(getDomain())
-            .username(getEmail())
-            .token(getToken())
-            .subject("Test Ticket")
+            .domain(Property.of(getDomain()))
+            .username(Property.of(getEmail()))
+            .token(Property.of(getToken()))
+            .subject(Property.of("Test Ticket"))
             .description("This is a test ticket from Kestra Unit Tests")
-            .priority(Create.Priority.NORMAL)
-            .ticketType(Create.Type.TASK)
-            .tags(List.of("kestra", "bug", "workflow"))
+            .priority(Property.of(Create.Priority.NORMAL))
+            .ticketType(Property.of(Create.Type.TASK))
+            .tags(Property.of(List.of("kestra", "bug", "workflow")))
             .build();
 
         Create.Output runOutput = task.run(runContext);
