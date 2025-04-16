@@ -22,7 +22,7 @@ import java.util.*;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "Opens new ticket at Zendesk."
+    title = "Open a new ticket in Zendesk."
 )
 @Plugin(
     examples = {
