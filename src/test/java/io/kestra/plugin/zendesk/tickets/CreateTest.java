@@ -29,14 +29,14 @@ class CreateTest {
         RunContext runContext = runContextFactory.of();
 
         Create task = Create.builder()
-            .domain(Property.of(getDomain()))
-            .username(Property.of(getEmail()))
-            .token(Property.of(getToken()))
-            .subject(Property.of("Test Ticket"))
+            .domain(Property.ofValue(getDomain()))
+            .username(Property.ofValue(getEmail()))
+            .token(Property.ofValue(getToken()))
+            .subject(Property.ofValue("Test Ticket"))
             .description("This is a test ticket from Kestra Unit Tests")
-            .priority(Property.of(Create.Priority.NORMAL))
-            .ticketType(Property.of(Create.Type.TASK))
-            .tags(Property.of(List.of("kestra", "bug", "workflow")))
+            .priority(Property.ofValue(Create.Priority.NORMAL))
+            .ticketType(Property.ofValue(Create.Type.TASK))
+            .tags(Property.ofValue(List.of("kestra", "bug", "workflow")))
             .build();
 
         Create.Output runOutput = task.run(runContext);
