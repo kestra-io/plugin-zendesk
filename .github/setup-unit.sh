@@ -12,8 +12,8 @@ Zendesk_TOKEN=$(docker exec "$Zendesk_CTN" printenv MOCK_ZENDESK_API_KEY)
 cat > src/test/resources/application-test.yaml <<EOF
 zendesk:
   url: "http://localhost:8084"
-  email: "demo@demo.com"
-  token: "token"
+  email: "$Zendesk_EMAIL"
+  token: "$Zendesk_TOKEN"
 EOF
 
 echo "Zendesk started with user $Zendesk_EMAIL and token $Zendesk_TOKEN"

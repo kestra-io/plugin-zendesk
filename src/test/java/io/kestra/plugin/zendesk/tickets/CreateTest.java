@@ -47,7 +47,7 @@ class CreateTest {
 
         Create.Output runOutput = task.run(runContext);
 
-        assertThat(runOutput, is(notNullValue()));
+        assertThat(runOutput.getUrl(), is(notNullValue()));
         assertThat(runOutput.getId(), is(notNullValue()));
     }
 }
