@@ -1,0 +1,9 @@
+services:
+  zendesk:
+    image: allansimon/mock-zendesk:latest
+    ports:
+      - "8084:80"
+    environment:
+      MOCK_ZENDESK_USERNAME: demo@demo.com
+      MOCK_ZENDESK_API_KEY: token
+      MOCK_ZENDESK_PORT: 80

@@ -5,6 +5,7 @@ import io.kestra.core.junit.annotations.KestraTest;
 import io.kestra.core.models.property.Property;
 import io.kestra.core.runners.RunContext;
 import io.kestra.core.runners.RunContextFactory;
+import io.micronaut.context.annotation.Value;
 import jakarta.inject.Inject;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.DisabledIf;
@@ -16,11 +17,16 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 
 @KestraTest
-@DisabledIf(
-    value = "canNotBeEnabled",
-    disabledReason = "Disabled for CI/CD as requires secrets data, such as: domain, token, email"
-)
 class CreateTest {
+    @Value("${zendesk.url}")
+    private String zendeskUrl;
+
+    @Value("${zendesk.email}")
+    private String zendeskEmail;
+
+    @Value("${zendesk.token}")
+    private String zendeskToken;
+
     @Inject
     private RunContextFactory runContextFactory;
 
@@ -29,38 +35,19 @@ class CreateTest {
         RunContext runContext = runContextFactory.of();
 
         Create task = Create.builder()
-            .domain(Property.of(getDomain()))
-            .username(Property.of(getEmail()))
-            .token(Property.of(getToken()))
-            .subject(Property.of("Test Ticket"))
+            .domain(Property.ofValue(zendeskUrl))
+            .username(Property.ofValue(zendeskEmail))
+            .token(Property.ofValue(zendeskToken))
+            .subject(Property.ofValue("Test Ticket"))
             .description("This is a test ticket from Kestra Unit Tests")
-            .priority(Property.of(Create.Priority.NORMAL))
-            .ticketType(Property.of(Create.Type.TASK))
-            .tags(Property.of(List.of("kestra", "bug", "workflow")))
+            .priority(Property.ofValue(Create.Priority.NORMAL))
+            .ticketType(Property.ofValue(Create.Type.TASK))
+            .tags(Property.ofValue(List.of("kestra", "bug", "workflow")))
             .build();
 
         Create.Output runOutput = task.run(runContext);
 
-        assertThat(runOutput.getUrl(), is(notNullValue()));
+        assertThat(runOutput, is(notNullValue()));
         assertThat(runOutput.getId(), is(notNullValue()));
     }
-
-    private static boolean canNotBeEnabled() {
-        return Strings.isNullOrEmpty(getDomain()) ||
-            Strings.isNullOrEmpty(getEmail()) ||
-            Strings.isNullOrEmpty(getToken());
-    }
-
-    private static String getDomain() {
-        return "";
-    }
-
-    private static String getEmail() {
-        return "";
-    }
-
-    private static String getToken() {
-        return "";
-    }
-
 }

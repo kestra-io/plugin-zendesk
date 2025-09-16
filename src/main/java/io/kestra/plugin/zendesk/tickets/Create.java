@@ -187,6 +187,8 @@ public class Create extends ZendeskConnection implements RunnableTask<Create.Out
 
     @Override
     public Create.Output run(RunContext runContext) throws Exception {
+        String rDomain = normaliseBase(runContext.render(this.getDomain()).as(String.class).orElseThrow());
+
         Ticket.TicketBuilder request = Ticket.builder()
             .subject(runContext.render(this.subject).as(String.class).orElse(null))
             .description(runContext.render(this.description))
@@ -202,7 +204,7 @@ public class Create extends ZendeskConnection implements RunnableTask<Create.Out
 
         return Output.builder()
             .id(response.getId())
-            .url(response.getUrl())
+            .url(Optional.ofNullable(response.getUrl()).orElse(String.format("%s/api/v2/tickets/%d.json", rDomain, response.getId())))
             .build();
     }
 
