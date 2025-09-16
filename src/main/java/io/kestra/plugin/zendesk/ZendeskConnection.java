@@ -55,9 +55,9 @@ public abstract class ZendeskConnection extends Task {
 
     public <T> T makeCall(RunContext runContext, String body, Class<T> clazz) throws Exception {
         try (HttpClient client = HttpClient.newHttpClient()) {
-            String rawUrl = runContext.render(this.domain).as(String.class).orElseThrow();
-            String baseUrl = normaliseBase(rawUrl);
-            String url  = ZENDESK_URL_FORMAT.formatted(baseUrl);
+            var url = ZENDESK_URL_FORMAT.formatted(
+                normaliseBase(runContext.render(this.domain).as(String.class).orElseThrow())
+            );
 
             HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
