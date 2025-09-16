@@ -1,32 +1,32 @@
-    package io.kestra.plugin.zendesk.models;
+package io.kestra.plugin.zendesk.models;
 
-    import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-    import com.fasterxml.jackson.annotation.JsonProperty;
-    import lombok.Builder;
-    import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
+import lombok.Data;
 
-    import java.util.List;
+import java.util.List;
 
-    @Data
-    @Builder
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public class Ticket {
+@Data
+@Builder
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class Ticket {
 
-        private Long id;
+    private Long id;
 
-        private String url;
+    private String url;
 
-        private String subject;
+    private String subject;
 
-        private String description;
+    private String description;
 
-        private String priority;
+    private String priority;
 
-        private String type;
+    private String type;
 
-        @JsonProperty("assignee_id")
-        private Long assigneeId;
+    @JsonProperty("assignee_id")
+    private Long assigneeId;
 
-        private List<String> tags;
+    private List<String> tags;
 
-    }
+}
