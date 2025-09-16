@@ -2,7 +2,6 @@ package io.kestra.plugin.zendesk;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.kestra.core.exceptions.IllegalVariableEvaluationException;
-import io.kestra.core.models.annotations.PluginProperty;
 import io.kestra.core.models.property.Property;
 import io.kestra.core.models.tasks.Task;
 import io.kestra.core.runners.RunContext;
@@ -31,7 +30,7 @@ public abstract class ZendeskConnection extends Task {
 
     protected final static ObjectMapper mapper = JacksonMapper.ofJson();
 
-    public static final String ZENDESK_URL_FORMAT = "https://%s/api/v2/tickets.json";
+    public static final String ZENDESK_URL_FORMAT = "%s/api/v2/tickets.json";
 
     @Schema(
         title = "Zendesk domain url"
@@ -56,7 +55,9 @@ public abstract class ZendeskConnection extends Task {
 
     public <T> T makeCall(RunContext runContext, String body, Class<T> clazz) throws Exception {
         try (HttpClient client = HttpClient.newHttpClient()) {
-            String url = ZENDESK_URL_FORMAT.formatted(runContext.render(this.domain).as(String.class).orElseThrow());
+            var url = ZENDESK_URL_FORMAT.formatted(
+                normaliseBase(runContext.render(this.domain).as(String.class).orElseThrow())
+            );
 
             HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
@@ -91,6 +92,13 @@ public abstract class ZendeskConnection extends Task {
         }
 
         throw new IllegalArgumentException("Authentication details are missing");
+    }
+
+    protected static String normaliseBase(String base) {
+        if (base.startsWith("http://") || base.startsWith("https://")) {
+            return base.endsWith("/") ? base.substring(0, base.length() - 1) : base;
+        }
+        return "https://" + base;
     }
 
 }
