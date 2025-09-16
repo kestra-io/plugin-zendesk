@@ -1,7 +1,6 @@
 docker compose -f docker-compose-ci.yml up -d
 
-for i in {1..30}; do
-  if curl -s http://localhost:8084/ >/dev/null; then break; fi
+until curl -s http://localhost:8084/ >/dev/null; do
   sleep 1
 done
 
