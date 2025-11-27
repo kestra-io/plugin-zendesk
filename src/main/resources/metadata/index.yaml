@@ -1,0 +1,8 @@
+group: io.kestra.plugin.zendesk
+name: "zendesk"
+title: "Zendesk"
+description: "This sub-group of plugins contains tasks for using a Zendesk API."
+body: ""
+videos: []
+createdBy: "Kestra Core Team"
+managedBy: "Kestra Core Team"

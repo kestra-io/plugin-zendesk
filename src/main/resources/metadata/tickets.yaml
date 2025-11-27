@@ -1,0 +1,8 @@
+group: io.kestra.plugin.zendesk.tickets
+name: "tickets"
+title: "Zendesk Tickets"
+description: "This sub-group of plugins contains tasks for managing Zendesk tickets."
+body: ""
+videos: []
+createdBy: "Kestra Core Team"
+managedBy: "Kestra Core Team"
