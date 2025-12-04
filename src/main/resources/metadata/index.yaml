@@ -1,8 +1,8 @@
 group: io.kestra.plugin.zendesk
 name: "zendesk"
 title: "Zendesk"
-description: "This sub-group of plugins contains tasks for using a Zendesk API."
-body: ""
+description: "Tasks that interact with the Zendesk API for ticketing."
+body: "Provide Zendesk subdomain, email/token credentials, and resource IDs to create, update, list, or delete tickets and related objects, returning API responses for support workflows."
 videos: []
 createdBy: "Kestra Core Team"
 managedBy: "Kestra Core Team"
