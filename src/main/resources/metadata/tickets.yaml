@@ -1,8 +1,8 @@
 group: io.kestra.plugin.zendesk.tickets
 name: "tickets"
 title: "Zendesk Tickets"
-description: "This sub-group of plugins contains tasks for managing Zendesk tickets."
-body: ""
+description: "Tasks that create, update, and retrieve Zendesk tickets."
+body: "Set the Zendesk instance URL with email/API token, ticket fields, and requester info to file or update tickets, add comments, or fetch ticket details for support automation."
 videos: []
 createdBy: "Kestra Core Team"
 managedBy: "Kestra Core Team"
