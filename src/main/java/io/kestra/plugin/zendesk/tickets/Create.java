@@ -38,7 +38,7 @@ import java.util.*;
                        type: io.kestra.plugin.zendesk.tickets.Create
                        domain: mycompany.zendesk.com
                        username: my_email@example.com
-                       token: zendesk_api_token
+                       token: "{{ secret('ZENDESK_TOKEN') }}"
                        subject: "Increased 5xx in Demo Service"
                        description: |
                          "The number of 5xx has increased beyond the threshold for Demo service."
@@ -61,7 +61,7 @@ import java.util.*;
                      - id: create_ticket
                        type: io.kestra.plugin.zendesk.tickets.Create
                        domain: mycompany.zendesk.com
-                       oauthToken: zendesk_oauth_token
+                       oauthToken: "{{ secret('ZENDESK_OAUTH_TOKEN') }}"
                        subject: "Increased 5xx in Demo Service"
                        description: |
                          "The number of 5xx has increased beyond the threshold for Demo service."
@@ -84,7 +84,7 @@ import java.util.*;
                      - id: create_ticket
                        type: io.kestra.plugin.zendesk.tickets.Create
                        domain: mycompany.zendesk.com
-                       oauthToken: zendesk_oauth_token
+                       oauthToken: "{{ secret('ZENDESK_OAUTH_TOKEN') }}"
                        subject: Workflow failed
                        description: |
                          "{{ execution.id }} has failed on {{ taskrun.startDate }}.
