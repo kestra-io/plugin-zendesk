@@ -33,23 +33,27 @@ public abstract class ZendeskConnection extends Task {
     public static final String ZENDESK_URL_FORMAT = "%s/api/v2/tickets.json";
 
     @Schema(
-        title = "Zendesk domain url"
+        title = "Zendesk domain URL",
+        description = "Base domain of the Zendesk instance; `https://` is added if missing and trailing slash is removed."
     )
     @NotNull
     private Property<String> domain;
 
     @Schema(
-        title = "Zendesk username"
+        title = "Zendesk username",
+        description = "Account email used with an API token for basic authentication."
     )
     private Property<String> username;
 
     @Schema(
-        title = "Zendesk api token"
+        title = "Zendesk API token",
+        description = "API token for basic auth; pair it with `username`."
     )
     private Property<String> token;
 
     @Schema(
-        title = "Zendesk oauth token, if api token and username is not provided"
+        title = "Zendesk OAuth token",
+        description = "Bearer token alternative to username/token; send as Authorization: Bearer."
     )
     private Property<String> oauthToken;
 
