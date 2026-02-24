@@ -22,7 +22,8 @@ import java.util.*;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "Open a new ticket in Zendesk."
+    title = "Create a Zendesk ticket",
+    description = "Calls `/api/v2/tickets.json` with basic auth (username + API token) or OAuth bearer. Renders templated fields with the current RunContext. Fails if Zendesk does not return HTTP 201."
 )
 @Plugin(
     examples = {
@@ -141,47 +142,39 @@ public class Create extends ZendeskConnection implements RunnableTask<Create.Out
     }
 
     @Schema(
-        title = "Ticket subject"
+        title = "Ticket subject line",
+        description = "Short summary shown in Zendesk; rendered from the RunContext."
     )
     private Property<String> subject;
 
     @Schema(
-        title = "Ticket description"
+        title = "Ticket description",
+        description = "Body of the ticket; templated via RunContext and supports multiline text."
     )
     @PluginProperty(dynamic = true)
     private String description;
 
     @Schema(
         title = "Priority",
-        description = """
-                      Available values:
-                       - URGENT
-                       - HIGH
-                       - NORMAL
-                       - LOW
-                      """
+        description = "Optional Zendesk priority. Allowed values: URGENT, HIGH, NORMAL, LOW. Leave blank to use Zendesk's default."
     )
     private Property<Priority> priority;
 
     @Schema(
         title = "Ticket type",
-        description = """
-                      Available values:
-                       - PROBLEM
-                       - INCIDENT
-                       - QUESTION
-                       - TASK
-                      """
+        description = "Optional Zendesk type. Allowed values: PROBLEM, INCIDENT, QUESTION, TASK."
     )
     private Property<Type> ticketType;
 
     @Schema(
-        title = "Id of assignee"
+        title = "Assignee ID",
+        description = "Numeric Zendesk assignee ID; omit to leave unassigned."
     )
     private Property<Long> assigneeId;
 
     @Schema(
-        title = "List of tags for ticket"
+        title = "Ticket tags",
+        description = "List of tags to apply to the ticket; rendered from the RunContext."
     )
     private Property<List<String>> tags;
 
@@ -218,7 +211,7 @@ public class Create extends ZendeskConnection implements RunnableTask<Create.Out
         private final String url;
 
         @Schema(
-            title = "Ticket id"
+            title = "Ticket ID"
         )
         private final Long id;
 
