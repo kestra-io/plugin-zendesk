@@ -1,5 +1,7 @@
 package io.kestra.plugin.zendesk.tickets;
 
+import java.util.*;
+
 import io.kestra.core.models.annotations.Example;
 import io.kestra.core.models.annotations.Plugin;
 import io.kestra.core.models.annotations.PluginProperty;
@@ -10,11 +12,10 @@ import io.kestra.plugin.zendesk.ZendeskConnection;
 import io.kestra.plugin.zendesk.models.Ticket;
 import io.kestra.plugin.zendesk.models.TicketRequest;
 import io.kestra.plugin.zendesk.models.TicketResponse;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-
-import java.util.*;
 
 @SuperBuilder
 @ToString
@@ -31,83 +32,83 @@ import java.util.*;
             title = "Create Zendesk ticket using username and token.",
             full = true,
             code = """
-                   id: zendesk_flow
-                   namespace: company.team
+                id: zendesk_flow
+                namespace: company.team
 
-                   tasks:
-                     - id: create_ticket
-                       type: io.kestra.plugin.zendesk.tickets.Create
-                       domain: mycompany.zendesk.com
-                       username: my_email@example.com
-                       token: "{{ secret('ZENDESK_TOKEN') }}"
-                       subject: "Increased 5xx in Demo Service"
-                       description: |
-                         "The number of 5xx has increased beyond the threshold for Demo service."
-                       priority: NORMAL
-                       ticketType: INCIDENT
-                       assigneeId: 1
-                       tags:
-                         - bug
-                         - workflow
-                   """
+                tasks:
+                  - id: create_ticket
+                    type: io.kestra.plugin.zendesk.tickets.Create
+                    domain: mycompany.zendesk.com
+                    username: my_email@example.com
+                    token: "{{ secret('ZENDESK_TOKEN') }}"
+                    subject: "Increased 5xx in Demo Service"
+                    description: |
+                      "The number of 5xx has increased beyond the threshold for Demo service."
+                    priority: NORMAL
+                    ticketType: INCIDENT
+                    assigneeId: 1
+                    tags:
+                      - bug
+                      - workflow
+                """
         ),
         @Example(
             title = "Create Zendesk ticket using OAuth token.",
             full = true,
             code = """
-                   id: zendesk_flow
-                   namespace: company.team
+                id: zendesk_flow
+                namespace: company.team
 
-                   tasks:
-                     - id: create_ticket
-                       type: io.kestra.plugin.zendesk.tickets.Create
-                       domain: mycompany.zendesk.com
-                       oauthToken: "{{ secret('ZENDESK_OAUTH_TOKEN') }}"
-                       subject: "Increased 5xx in Demo Service"
-                       description: |
-                         "The number of 5xx has increased beyond the threshold for Demo service."
-                       priority: NORMAL
-                       ticketType: INCIDENT
-                       assigneeId: 1
-                       tags:
-                         - bug
-                         - workflow
-                   """
+                tasks:
+                  - id: create_ticket
+                    type: io.kestra.plugin.zendesk.tickets.Create
+                    domain: mycompany.zendesk.com
+                    oauthToken: "{{ secret('ZENDESK_OAUTH_TOKEN') }}"
+                    subject: "Increased 5xx in Demo Service"
+                    description: |
+                      "The number of 5xx has increased beyond the threshold for Demo service."
+                    priority: NORMAL
+                    ticketType: INCIDENT
+                    assigneeId: 1
+                    tags:
+                      - bug
+                      - workflow
+                """
         ),
         @Example(
             title = "Create a ticket when a Kestra workflow in any namespace with `company` as prefix fails.",
             full = true,
             code = """
-                   id: create_ticket_on_failure
-                   namespace: company.team
+                id: create_ticket_on_failure
+                namespace: company.team
 
-                   tasks:
-                     - id: create_ticket
-                       type: io.kestra.plugin.zendesk.tickets.Create
-                       domain: mycompany.zendesk.com
-                       oauthToken: "{{ secret('ZENDESK_OAUTH_TOKEN') }}"
-                       subject: Workflow failed
-                       description: |
-                         "{{ execution.id }} has failed on {{ taskrun.startDate }}.
-                         See the link below for more details."
-                       priority: NORMAL
-                       ticketType: INCIDENT
-                       assigneeId: 1
-                       tags:
-                         - bug
-                         - workflow
-                   triggers:
-                     - id: on_failure
-                       type: io.kestra.plugin.core.trigger.Flow
-                       conditions:
-                         - type: io.kestra.plugin.core.condition.ExecutionStatus
-                           in:
-                             - FAILED
-                             - WARNING
-                         - type: io.kestra.plugin.core.condition.ExecutionNamespace
-                           namespace: company
-                           comparison: PREFIX
-                   """
+                tasks:
+                  - id: create_ticket
+                    type: io.kestra.plugin.zendesk.tickets.Create
+                    domain: mycompany.zendesk.com
+                    oauthToken: "{{ secret('ZENDESK_OAUTH_TOKEN') }}"
+                    subject: Workflow failed
+                    description: |
+                      "{{ execution.id }} has failed on {{ taskrun.startDate }}.
+                      See the link below for more details."
+                    priority: NORMAL
+                    ticketType: INCIDENT
+                    assigneeId: 1
+                    tags:
+                      - bug
+                      - workflow
+                triggers:
+                  - id: on_failure
+                    type: io.kestra.plugin.core.trigger.Flow
+                    conditions:
+                      - type: io.kestra.plugin.core.condition.ExecutionStatus
+                        in:
+                          - FAILED
+                          - WARNING
+                      - type: io.kestra.plugin.core.condition.ExecutionNamespace
+                        namespace: company
+                        comparison: PREFIX
+                """
         )
     }
 )
