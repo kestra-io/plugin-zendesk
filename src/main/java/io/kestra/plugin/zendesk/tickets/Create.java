@@ -146,37 +146,42 @@ public class Create extends ZendeskConnection implements RunnableTask<Create.Out
         title = "Ticket subject line",
         description = "Short summary shown in Zendesk; rendered from the RunContext."
     )
+    @PluginProperty(group = "main")
     private Property<String> subject;
 
     @Schema(
         title = "Ticket description",
         description = "Body of the ticket; templated via RunContext and supports multiline text."
     )
-    @PluginProperty(dynamic = true)
+    @PluginProperty(dynamic = true, group = "advanced")
     private String description;
 
     @Schema(
         title = "Priority",
         description = "Optional Zendesk priority. Allowed values: URGENT, HIGH, NORMAL, LOW. Leave blank to use Zendesk's default."
     )
+    @PluginProperty(group = "advanced")
     private Property<Priority> priority;
 
     @Schema(
         title = "Ticket type",
         description = "Optional Zendesk type. Allowed values: PROBLEM, INCIDENT, QUESTION, TASK."
     )
+    @PluginProperty(group = "advanced")
     private Property<Type> ticketType;
 
     @Schema(
         title = "Assignee ID",
         description = "Numeric Zendesk assignee ID; omit to leave unassigned."
     )
+    @PluginProperty(group = "advanced")
     private Property<Long> assigneeId;
 
     @Schema(
         title = "Ticket tags",
         description = "List of tags to apply to the ticket; rendered from the RunContext."
     )
+    @PluginProperty(group = "advanced")
     private Property<List<String>> tags;
 
     @Override
