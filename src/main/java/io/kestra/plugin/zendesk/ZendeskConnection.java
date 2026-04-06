@@ -22,6 +22,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
+import io.kestra.core.models.annotations.PluginProperty;
 
 @SuperBuilder
 @ToString
@@ -39,24 +40,28 @@ public abstract class ZendeskConnection extends Task {
         description = "Base domain of the Zendesk instance; `https://` is added if missing and trailing slash is removed."
     )
     @NotNull
+    @PluginProperty(group = "main")
     private Property<String> domain;
 
     @Schema(
         title = "Zendesk username",
         description = "Account email used with an API token for basic authentication."
     )
+    @PluginProperty(group = "connection")
     private Property<String> username;
 
     @Schema(
         title = "Zendesk API token",
         description = "API token for basic auth; pair it with `username`."
     )
+    @PluginProperty(group = "connection")
     private Property<String> token;
 
     @Schema(
         title = "Zendesk OAuth token",
         description = "Bearer token alternative to username/token; send as Authorization: Bearer."
     )
+    @PluginProperty(group = "connection")
     private Property<String> oauthToken;
 
     public <T> T makeCall(RunContext runContext, String body, Class<T> clazz) throws Exception {
