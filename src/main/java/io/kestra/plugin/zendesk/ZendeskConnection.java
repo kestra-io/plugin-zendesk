@@ -47,21 +47,21 @@ public abstract class ZendeskConnection extends Task {
         title = "Zendesk username",
         description = "Account email used with an API token for basic authentication."
     )
-    @PluginProperty(group = "connection")
+    @PluginProperty(secret = true, group = "connection")
     private Property<String> username;
 
     @Schema(
         title = "Zendesk API token",
         description = "API token for basic auth; pair it with `username`."
     )
-    @PluginProperty(group = "connection")
+    @PluginProperty(group = "connection", secret = true)
     private Property<String> token;
 
     @Schema(
         title = "Zendesk OAuth token",
         description = "Bearer token alternative to username/token; send as Authorization: Bearer."
     )
-    @PluginProperty(group = "connection")
+    @PluginProperty(group = "connection", secret = true)
     private Property<String> oauthToken;
 
     public <T> T makeCall(RunContext runContext, String body, Class<T> clazz) throws Exception {
