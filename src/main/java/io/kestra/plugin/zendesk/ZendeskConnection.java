@@ -48,6 +48,7 @@ public abstract class ZendeskConnection extends Task {
         description = "Account email used with an API token for basic authentication."
     )
     @PluginProperty(secret = true, group = "connection")
+    @ToString.Exclude
     private Property<String> username;
 
     @Schema(
@@ -55,6 +56,7 @@ public abstract class ZendeskConnection extends Task {
         description = "API token for basic auth; pair it with `username`."
     )
     @PluginProperty(group = "connection", secret = true)
+    @ToString.Exclude
     private Property<String> token;
 
     @Schema(
@@ -62,6 +64,7 @@ public abstract class ZendeskConnection extends Task {
         description = "Bearer token alternative to username/token; send as Authorization: Bearer."
     )
     @PluginProperty(group = "connection", secret = true)
+    @ToString.Exclude
     private Property<String> oauthToken;
 
     public <T> T makeCall(RunContext runContext, String body, Class<T> clazz) throws Exception {
