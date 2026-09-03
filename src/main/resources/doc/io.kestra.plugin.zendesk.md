@@ -4,7 +4,7 @@ Create support tickets in Zendesk from Kestra flows.
 
 ## Authentication
 
-Set `domain` to your Zendesk account URL. For API token auth, set `username` (your account email) and `token`. For OAuth, set `oauthToken` instead — it is used as a bearer token and takes precedence over `username`/`token`. Store secrets in [secrets](https://kestra.io/docs/concepts/secret) and apply connection properties globally with [plugin defaults](https://kestra.io/docs/workflow-components/plugin-defaults).
+Set `domain` to your Zendesk account URL. For API token auth, set `username` (your account email) and `token`. For OAuth, set `oauthToken` instead — it is used as a bearer token and takes precedence over `username`/`token`. Store secrets in [secrets](https://kestra.io/docs/concepts/secret) and set connection properties on each task.
 
 ## Tasks
 
