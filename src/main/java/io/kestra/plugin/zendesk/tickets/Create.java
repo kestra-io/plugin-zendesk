@@ -76,7 +76,7 @@ import lombok.experimental.SuperBuilder;
                 """
         ),
         @Example(
-            title = "Create a ticket when a Kestra workflow in any namespace with `company` as prefix fails.",
+            title = "Create a ticket when any Kestra workflow fails or ends with a warning.",
             full = true,
             code = """
                 id: create_ticket_on_failure
@@ -100,14 +100,9 @@ import lombok.experimental.SuperBuilder;
                 triggers:
                   - id: on_failure
                     type: io.kestra.plugin.core.trigger.Flow
-                    conditions:
-                      - type: io.kestra.plugin.core.condition.ExecutionStatus
-                        in:
-                          - FAILED
-                          - WARNING
-                      - type: io.kestra.plugin.core.condition.ExecutionNamespace
-                        namespace: company
-                        comparison: PREFIX
+                    states:
+                      - FAILED
+                      - WARNING
                 """
         )
     }
@@ -153,7 +148,7 @@ public class Create extends ZendeskConnection implements RunnableTask<Create.Out
         title = "Ticket description",
         description = "Body of the ticket; templated via RunContext and supports multiline text."
     )
-    @PluginProperty(dynamic = true, group = "advanced")
+    @PluginProperty(dynamic = true, group = "main")
     private String description;
 
     @Schema(
@@ -195,7 +190,7 @@ public class Create extends ZendeskConnection implements RunnableTask<Create.Out
             .type(runContext.render(this.ticketType).as(Create.Type.class).map(Create.Type::toString).orElse(null))
             .tags(runContext.render(this.tags).asList(String.class));
 
-        runContext.render(assigneeId).as(Long.class).ifPresent(request::id);
+        runContext.render(assigneeId).as(Long.class).ifPresent(request::assigneeId);
 
         String requestBody = mapper.writeValueAsString(new TicketRequest(request.build()));
 

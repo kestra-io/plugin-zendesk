@@ -40,15 +40,14 @@ public abstract class ZendeskConnection extends Task {
         description = "Base domain of the Zendesk instance; `https://` is added if missing and trailing slash is removed."
     )
     @NotNull
-    @PluginProperty(group = "main")
+    @PluginProperty(group = "connection")
     private Property<String> domain;
 
     @Schema(
         title = "Zendesk username",
         description = "Account email used with an API token for basic authentication."
     )
-    @PluginProperty(secret = true, group = "connection")
-    @ToString.Exclude
+    @PluginProperty(group = "connection")
     private Property<String> username;
 
     @Schema(
