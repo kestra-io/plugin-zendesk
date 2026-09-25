@@ -17,6 +17,7 @@ import io.kestra.core.junit.annotations.KestraTest;
 import io.kestra.core.models.property.Property;
 import io.kestra.core.runners.RunContext;
 import io.kestra.core.runners.RunContextFactory;
+import io.kestra.core.serializers.JacksonMapper;
 
 import jakarta.inject.Inject;
 
@@ -32,7 +33,7 @@ class CreateAssigneeTest {
     @Inject
     private RunContextFactory runContextFactory;
 
-    private final ObjectMapper mapper = new ObjectMapper();
+    private final ObjectMapper mapper = JacksonMapper.ofJson();
 
     private HttpServer server;
 
