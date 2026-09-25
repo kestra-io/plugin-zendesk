@@ -153,7 +153,7 @@ public class Create extends ZendeskConnection implements RunnableTask<Create.Out
         title = "Ticket description",
         description = "Body of the ticket; templated via RunContext and supports multiline text."
     )
-    @PluginProperty(dynamic = true, group = "advanced")
+    @PluginProperty(dynamic = true, group = "main")
     private String description;
 
     @Schema(
