@@ -76,7 +76,7 @@ import lombok.experimental.SuperBuilder;
                 """
         ),
         @Example(
-            title = "Create a ticket when a Kestra workflow in any namespace with `company` as prefix fails.",
+            title = "Create a ticket when any Kestra workflow fails or ends with a warning.",
             full = true,
             code = """
                 id: create_ticket_on_failure
@@ -100,14 +100,9 @@ import lombok.experimental.SuperBuilder;
                 triggers:
                   - id: on_failure
                     type: io.kestra.plugin.core.trigger.Flow
-                    conditions:
-                      - type: io.kestra.plugin.core.condition.ExecutionStatus
-                        in:
-                          - FAILED
-                          - WARNING
-                      - type: io.kestra.plugin.core.condition.ExecutionNamespace
-                        namespace: company
-                        comparison: PREFIX
+                    states:
+                      - FAILED
+                      - WARNING
                 """
         )
     }
