@@ -190,7 +190,7 @@ public class Create extends ZendeskConnection implements RunnableTask<Create.Out
             .type(runContext.render(this.ticketType).as(Create.Type.class).map(Create.Type::toString).orElse(null))
             .tags(runContext.render(this.tags).asList(String.class));
 
-        runContext.render(assigneeId).as(Long.class).ifPresent(request::id);
+        runContext.render(assigneeId).as(Long.class).ifPresent(request::assigneeId);
 
         String requestBody = mapper.writeValueAsString(new TicketRequest(request.build()));
 
