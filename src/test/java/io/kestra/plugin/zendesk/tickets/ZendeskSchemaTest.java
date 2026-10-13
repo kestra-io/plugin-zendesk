@@ -45,6 +45,28 @@ class ZendeskSchemaTest {
         assertThat(secret(properties.get("oauthToken")), is(true));
     }
 
+    @Test
+    @SuppressWarnings("unchecked")
+    void createExposesTheAgentUrlAsTheTicketUrl() {
+        var generate = jsonSchemaGenerator.outputs(Task.class, Create.class);
+        var outputs = (Map<String, Map<String, Object>>) generate.get("properties");
+
+        assertThat(outputs.get("webUrl").get("$ticketingRole"), is("TICKET_URL"));
+        assertThat(outputs.get("url").containsKey("$ticketingRole"), is(false));
+        assertThat(outputs.get("id").get("$ticketingRole"), is("TICKET_KEY"));
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    void createTranslatesTheCaseSeverityIntoZendeskPriorities() {
+        var inputs = (Map<String, Map<String, Object>>) jsonSchemaGenerator.properties(Task.class, Create.class).get("properties");
+
+        assertThat(metadata(inputs.get("priority")).get("$ticketingValueMap"), is(Map.of("CRITICAL", "URGENT", "HIGH", "HIGH", "MEDIUM", "NORMAL", "LOW", "LOW")));
+        for (Object zendeskPriority : ((Map<String, String>) metadata(inputs.get("priority")).get("$ticketingValueMap")).values()) {
+            Create.Priority.valueOf((String) zendeskPriority);
+        }
+    }
+
     // Dynamic-renderable non-String properties (e.g. Long, enum, List) render as an "anyOf" of type
     // variants (typed value + Pebble expression string) instead of a flat schema, so `$group`/`$secret`
     // live on the first "anyOf" entry rather than at the top level.
