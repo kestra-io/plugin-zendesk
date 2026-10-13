@@ -65,6 +65,7 @@ class CreateAssigneeTest {
         Create.Output runOutput = task.run(runContext);
 
         assertThat(runOutput.getId(), is(42L));
+        assertThat(runOutput.getWebUrl(), is("http://localhost:" + server.getAddress().getPort() + "/agent/tickets/42"));
         assertThat(capturedAuthorization.get(), notNullValue());
 
         JsonNode ticket = mapper.readTree(capturedBody.get()).get("ticket");

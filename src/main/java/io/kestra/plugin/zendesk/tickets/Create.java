@@ -5,6 +5,7 @@ import java.util.*;
 import io.kestra.core.models.annotations.Example;
 import io.kestra.core.models.annotations.Plugin;
 import io.kestra.core.models.annotations.PluginProperty;
+import io.kestra.core.models.annotations.TicketingField;
 import io.kestra.core.models.property.Property;
 import io.kestra.core.models.tasks.RunnableTask;
 import io.kestra.core.models.tasks.TicketingTaskInterface;
@@ -143,6 +144,7 @@ public class Create extends ZendeskConnection implements RunnableTask<Create.Out
         description = "Short summary shown in Zendesk; rendered from the RunContext."
     )
     @PluginProperty(group = "main")
+    @TicketingField(role = TicketingField.Role.CASE_TITLE)
     private Property<String> subject;
 
     @Schema(
@@ -150,6 +152,7 @@ public class Create extends ZendeskConnection implements RunnableTask<Create.Out
         description = "Body of the ticket; templated via RunContext and supports multiline text."
     )
     @PluginProperty(dynamic = true, group = "main")
+    @TicketingField(role = TicketingField.Role.CASE_DESCRIPTION)
     private String description;
 
     @Schema(
@@ -157,6 +160,7 @@ public class Create extends ZendeskConnection implements RunnableTask<Create.Out
         description = "Optional Zendesk priority. Allowed values: URGENT, HIGH, NORMAL, LOW. Leave blank to use Zendesk's default."
     )
     @PluginProperty(group = "advanced")
+    @TicketingField(role = TicketingField.Role.CASE_SEVERITY, valueMap = {@TicketingField.Mapping(from = "CRITICAL", to = "URGENT"), @TicketingField.Mapping(from = "HIGH", to = "HIGH"), @TicketingField.Mapping(from = "MEDIUM", to = "NORMAL"), @TicketingField.Mapping(from = "LOW", to = "LOW")})
     private Property<Priority> priority;
 
     @Schema(
@@ -200,6 +204,7 @@ public class Create extends ZendeskConnection implements RunnableTask<Create.Out
         return Output.builder()
             .id(response.getId())
             .url(Optional.ofNullable(response.getUrl()).orElse(String.format("%s/api/v2/tickets/%d.json", rDomain, response.getId())))
+            .webUrl(String.format("%s/agent/tickets/%d", rDomain, response.getId()))
             .build();
     }
 
@@ -208,13 +213,21 @@ public class Create extends ZendeskConnection implements RunnableTask<Create.Out
     public static class Output implements io.kestra.core.models.tasks.Output {
 
         @Schema(
-            title = "Ticket URL"
+            title = "Ticket API URL"
         )
         private final String url;
 
         @Schema(
+            title = "Ticket URL",
+            description = "Link that opens the ticket in the Zendesk agent interface."
+        )
+        @TicketingField(role = TicketingField.Role.TICKET_URL)
+        private final String webUrl;
+
+        @Schema(
             title = "Ticket ID"
         )
+        @TicketingField(role = TicketingField.Role.TICKET_KEY)
         private final Long id;
 
     }
