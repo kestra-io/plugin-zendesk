@@ -108,10 +108,8 @@ public abstract class ZendeskConnection extends Task {
     }
 
     protected static String normaliseBase(String base) {
-        if (base.startsWith("http://") || base.startsWith("https://")) {
-            return base.endsWith("/") ? base.substring(0, base.length() - 1) : base;
-        }
-        return "https://" + base;
+        String withScheme = base.startsWith("http://") || base.startsWith("https://") ? base : "https://" + base;
+        return withScheme.endsWith("/") ? withScheme.substring(0, withScheme.length() - 1) : withScheme;
     }
 
 }
